@@ -11,6 +11,17 @@ set nocompatible
 " Make backspace back up a tabstop. Especailly handy for editing Python
 set smarttab
 
+" When editing a file, always jump to the last known cursor position.
+" Don't do it when the position is invalid or when inside an event handler
+" (happens when dropping a file on gvim).
+autocmd BufReadPost *
+ \ if line("'\"") > 0 && line("'\"") <= line("$") |
+ \   exe "normal g`\"" |
+ \ endif
+
+" When we open a git commit message jump to the top and enter insert mode.
+au BufNewFile,BufRead *.git/COMMIT_EDITMSG :1 | :start
+
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
 
@@ -357,13 +368,53 @@ let g:jedi#popup_on_dot = 0
 
 """"
 " C++
+" Searches up from the current directory to the directory with a build.gradle
+" (e.g. the sub-project root) and then from there down for a file with the
+" given name.
+function! FindRelToSubProject(fname)
+   let l:thisdir = expand('%:p:h')
+   let l:buildfile = findfile('build.gradle', l:thisdir . ';')
+   let l:builddir = fnamemodify(l:buildfile, ':p:h')
+   return findfile(a:fname, l:builddir . '/**')
+endfunction
+
+" Find a file with the same name as the current buffer but with a different
+" file extension. Specifically find a file with the same name as current file
+" but with the extension swapped as per the argument using
+" FindRelToSubProject. Then open that file for editing.
+function! EditExtension(ext)
+   let l:basefile = expand('%:t:r')
+   let l:newfile = FindRelToSubProject(l:basefile . a:ext)
+   :execute "e" l:newfile
+endfunction
+
 " Add ability to switch from .h to .cc quickly
-command! Toh :e %:r.h
-command! Toc :e %:r.cc
+command! Toh :call EditExtension('.h')
+command! Toc :call EditExtension('.cpp')
+
 autocmd FileType c,cpp setlocal et ts=2 sw=2 tw=120 
 " spell check is smart enough to only check spelling in comments and strings,
 " so turn that on for C++ code.
 autocmd FileType c,cpp setlocal spell
+autocmd FileType c,cpp nmap <buffer> <C-]> :YcmCompleter GoTo<CR>
+let g:ycm_min_num_of_chars_for_completion = 0
+
+function! CallGradle(...)
+ let l:gradle_path = findfile('gradlew', '.;')
+ " a:0 == # of args to the command
+ if a:0 == 0
+    let &makeprg = l:gradle_path . " build"
+ else
+    let &makeprg = l:gradle_path . " " . join(a:000)
+ endif
+ :make!
+endfunction
+
+command! -narg=* G :call CallGradle(<f-args>)|:copen|:winc J
+command! Fix :YcmCompleter FixIt
+command! Err :YcmDiags
+command! Gt :G buildTestOSXDebug
+
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Fileype specific configs for non-programming languages.
