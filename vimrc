@@ -23,6 +23,9 @@ filetype plugin indent on
 " End of Vundle setup.
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+command! SmallFont :set guifont=Monaco:h10
+command! Bigfont :set guifont=Menlo:h11
+
 " Make backspace back up a tabstop. Especailly handy for editing Python
 set smarttab
 
