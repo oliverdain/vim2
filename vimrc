@@ -15,6 +15,7 @@ call vundle#begin()
 
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'Valloric/YouCompleteMe'
+Plugin 'SirVer/ultisnips'
 
 call vundle#end()
 filetype plugin indent on
@@ -28,6 +29,9 @@ command! Bigfont :set guifont=Menlo:h11
 
 " Make backspace back up a tabstop. Especailly handy for editing Python
 set smarttab
+
+" Ultisnips defaults to <tab> but that conflicts with YouCompleteMe
+let g:UltiSnipsExpandTrigger = '<C-j>'
 
 " When editing a file, always jump to the last known cursor position.
 " Don't do it when the position is invalid or when inside an event handler

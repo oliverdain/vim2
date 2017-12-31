@@ -9,8 +9,6 @@
 #ifndef <+INCLUDE_GUARD,.*cpp+>
 #define <+INCLUDE_GUARD,.*cpp+>
 
-namespace XXX {
-
-}  // namespace
+~~CURSOR~~
 
 #endif  // <+INCLUDE_GUARD,.*cpp+>

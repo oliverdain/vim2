@@ -6,6 +6,4 @@
 // Copyright © 2017 Revl. All rights reserved.
 //
 
-namespace XXX {
-
-}  // namespace
+~~CURSOR~~
