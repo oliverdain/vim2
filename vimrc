@@ -16,6 +16,9 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'SirVer/ultisnips'
+Plugin 'nvie/vim-flake8'
+Plugin 'tpope/vim-fugitive.git'
+Plugin 'tpope/vim-rhubarb.git'
 
 call vundle#end()
 filetype plugin indent on
@@ -364,7 +367,6 @@ au! BufNewFile * :call OnNewFile()
 " Language specific configs
 " Note some of this is also done via ~/.vim/indent, ~/.vim/ftplugin, etc.
 
-
 """"
 " Configs for multiple languages
 " highlight characters after column 80
@@ -375,6 +377,11 @@ autocmd FileType java,cpp,c,python,javascript match TooManyChars /\%>120v.\+/
 " TODO: This turns off highlighting globally. Should figure out how to do it
 " for just the current buffer.
 command! NoHl :hi TooManyChars NONE
+
+"""
+" Markdown
+
+autocmd FileType markdown setlocal tw=120 spell
 
 """"
 " Python

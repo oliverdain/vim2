@@ -2,6 +2,7 @@ snippet class "Creates a class skeleton"
 class $1 {
  public:
   $1() = delete;
+  virtual ~$1() {}
   $1(const $1& other) = delete;
   $1& operator=(const $1& other) = delete;
 

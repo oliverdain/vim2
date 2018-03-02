@@ -3,7 +3,7 @@
 // Revl
 //
 // Created by Oliver Dain on <+DATE,%m/%d/%Y+>
-// Copyright © 2017 Revl. All rights reserved.
+// Copyright © 2018 Revl. All rights reserved.
 //
 
 #ifndef <+INCLUDE_GUARD,.*cpp+>
