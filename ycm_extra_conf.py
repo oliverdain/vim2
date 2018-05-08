@@ -122,6 +122,38 @@ def GetCompilationInfoForFile( filename ):
 
 
 PROEJCT_DEP_RE = re.compile("""(publicDep|privateDep)\('([^)]+)'\)""")
+THIRD_PARTY_DEP_RE = re.compile(
+    """(3rdPartyDep|3rdPartyDepForceLink)\('([^']+)'""")
+
+VERSION_LINE_RE = re.compile("""version *= *'([^']+)'""")
+
+def GetIncludePathsFor3rdParty(tp_lib_path):
+    """Given the path to a third party lib (e.g. :third_party:cpp:eigen) return
+    a list of directories to add to the include path."""
+    repo_root = os.path.abspath(os.path.split(DirectoryOfThisScript())[0])
+    # First find the version info for the lib
+    assert tp_lib_path.startswith(':')
+    build_path = os.path.join(repo_root, tp_lib_path[1:].replace(':', '/'),
+                              'build.gradle')
+    with open(build_path, 'r') as bf:
+        version = None
+        for line in bf:
+            m = VERSION_LINE_RE.search(line)
+            if m is not None:
+                version = m.group(1)
+                break
+        if version is None:
+            print('Unable to find version for', tp_lib_path,
+                  file=log, flush=True)
+            return []
+
+    lib_name = tp_lib_path.split(':')[-1]
+    include_dir = os.path.join(repo_root, '.install/OSX/Debug', lib_name,
+                               version, 'include')
+    print('Include dir for %s is %s' % (tp_lib_path, include_dir),
+          file=log, flush=True)
+    return [include_dir,]
+
 
 def GetIncludePathsForFile(filename):
     """If we weren't able to get actual compile info from the DB we can parse
@@ -156,7 +188,10 @@ def GetIncludePathsForFile(filename):
                 proj_dir = os.path.join(repo_root, proj[1:].replace(':', '/'))
                 print('proj dir:', proj_dir, file=log, flush=True)
                 idirs.append(os.path.join(proj_dir, 'include'))
-
+            m = THIRD_PARTY_DEP_RE.search(line)
+            if m is not None:
+                for inc_dir in GetIncludePathsFor3rdParty(m.group(2)):
+                    idirs.append(inc_dir)
 
     return list(map(lambda x: '-I' + x, idirs))
         
