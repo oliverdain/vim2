@@ -427,6 +427,7 @@ autocmd FileType c,cpp setlocal et ts=2 sw=2 tw=120
 autocmd FileType c,cpp setlocal spell
 autocmd FileType c,cpp nmap <buffer> <C-]> :YcmCompleter GoTo<CR>
 let g:ycm_min_num_of_chars_for_completion = 0
+let g:ycm_confirm_extra_conf = 0
 
 function! CallGradle(...)
  let l:gradle_path = findfile('gradlew', '.;')
