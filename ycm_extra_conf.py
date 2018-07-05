@@ -43,6 +43,7 @@ flags = [
 '-Wextra',
 '-Werror',
 '-Wno-unused-parameter',
+'-Wno-unused-variable',
 '-Wno-long-long',
 '-Wno-variadic-macros',
 '-fexceptions',

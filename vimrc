@@ -19,6 +19,8 @@ Plugin 'SirVer/ultisnips'
 Plugin 'nvie/vim-flake8'
 Plugin 'tpope/vim-fugitive.git'
 Plugin 'tpope/vim-rhubarb.git'
+Plugin 'mileszs/ack.vim'
+Plugin 'scrooloose/nerdtree'
 
 call vundle#end()
 filetype plugin indent on
@@ -29,6 +31,12 @@ filetype plugin indent on
 
 command! SmallFont :set guifont=Monaco:h10
 command! Bigfont :set guifont=Menlo:h11
+
+" To use ag/Silver Searcher (https://github.com/ggreer/the_silver_searcher)
+" with the Ack plugin
+if executable('ag')
+  let g:ackprg = 'ag --vimgrep'
+endif
 
 " Make backspace back up a tabstop. Especailly handy for editing Python
 set smarttab
