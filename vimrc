@@ -5,6 +5,12 @@
 " This must be first, because it changes other options as a side effect.
 set nocompatible
 
+" Temporary workaround to suppress warning a about vim calling
+" deprecated Python features. See https://github.com/vim/vim/issues/3117
+if has('python3')
+  silent! python3 1
+endif
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Vundle setup. All Vundle things have to be in this section
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -31,6 +37,10 @@ filetype plugin indent on
 
 command! SmallFont :set guifont=Monaco:h10
 command! Bigfont :set guifont=Menlo:h11
+
+" Nerdtree shortcuts
+map <C-n> :NERDTree %:p:h<CR>
+map <C-p> :NERDTree<CR>
 
 " To use ag/Silver Searcher (https://github.com/ggreer/the_silver_searcher)
 " with the Ack plugin
@@ -150,10 +160,9 @@ endif
 " screen.
 command! Mk :make|:copen|:winc J
 
-" On some OS's (Ubuntu, I'm looking at you) the default collation order is
-" wrong so you can't use !sort to sort file names that have '.' characters in
-" them. This fixes that ugliness.
-command! -range=% Sort :<line1>,<line2>!LC_COLLATE=C sort
+" Sorts #include blocks files (or any other block of things with blank lines
+" above and below)
+map <leader>s {jV}k :!sort<cr>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Templates: My personal templating system
