@@ -18,15 +18,16 @@ filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
-
 Plugin 'VundleVim/Vundle.vim'
-Plugin 'Valloric/YouCompleteMe'
 Plugin 'SirVer/ultisnips'
 Plugin 'nvie/vim-flake8'
 Plugin 'tpope/vim-fugitive.git'
 Plugin 'tpope/vim-rhubarb.git'
 Plugin 'mileszs/ack.vim'
 Plugin 'scrooloose/nerdtree'
+Plugin 'rip-rip/clang_complete'
+Plugin 'ervandew/supertab'
+Plugin 'majutsushi/tagbar'
 
 call vundle#end()
 filetype plugin indent on
@@ -417,6 +418,16 @@ let g:jedi#popup_on_dot = 0
 " Searches up from the current directory to the directory with a build.gradle
 " (e.g. the sub-project root) and then from there down for a file with the
 " given name.
+
+" clang_complete setup
+let g:clang_library_path="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib"
+let g:clang_auto_user_options="compile_commands.json, .clang_complete"
+let g:clang_snippets = 1
+let g:clang_snippets_engine = 'clang_complete'
+
+" tagbar setup
+nmap <leader>t :TagbarToggle<CR>
+
 function! FindRelToSubProject(fname)
    let l:thisdir = expand('%:p:h')
    let l:buildfile = findfile('build.gradle', l:thisdir . ';')
@@ -442,9 +453,6 @@ autocmd FileType c,cpp setlocal et ts=2 sw=2 tw=120
 " spell check is smart enough to only check spelling in comments and strings,
 " so turn that on for C++ code.
 autocmd FileType c,cpp setlocal spell
-autocmd FileType c,cpp nmap <buffer> <C-]> :YcmCompleter GoTo<CR>
-let g:ycm_min_num_of_chars_for_completion = 0
-let g:ycm_confirm_extra_conf = 0
 
 function! CallGradle(...)
  let l:gradle_path = findfile('gradlew', '.;')
