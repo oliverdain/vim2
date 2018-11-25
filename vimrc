@@ -25,13 +25,18 @@ Plugin 'tpope/vim-fugitive.git'
 Plugin 'tpope/vim-rhubarb.git'
 Plugin 'mileszs/ack.vim'
 Plugin 'scrooloose/nerdtree'
+Plugin 'Shougo/deoplete.nvim'
 Plugin 'rip-rip/clang_complete'
 Plugin 'ervandew/supertab'
 Plugin 'majutsushi/tagbar'
 Plugin 'godlygeek/tabular'
 Plugin 'plasticboy/vim-markdown'
-" LustyExplorer
 Plugin 'sjbach/lusty'
+" neomake and asyncrun both let you run commands async but asyncrun is much
+" simpler and it auto-scrolls the output in the quickfix window which seems to
+" be impossible via neomake so I mostly use asyncrun
+Plugin 'neomake/neomake'
+Plugin 'skywind3000/asyncrun.vim'
 
 call vundle#end()
 filetype plugin indent on
@@ -39,6 +44,14 @@ filetype plugin indent on
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " End of Vundle setup.
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" neovim setup
+if has('nvim')
+   " Make normal escape exit terminal mode
+   :tnoremap <Esc> <C-\><C-n>
+endif
+
+" end neovim setup
 
 if !has('gui_vimr')
    command! SmallFont :set guifont=Monaco:h10
@@ -162,10 +175,6 @@ command! Bc :b#|:bd#
 if &t_Co > 2 || has("gui_running")
   syntax on
 endif
-
-" A command to call :make and then open the error window at the bottom of the
-" screen.
-command! Mk :make|:copen|:winc J
 
 " Sorts #include blocks files (or any other block of things with blank lines
 " above and below)
@@ -407,6 +416,7 @@ command! NoHl :hi TooManyChars NONE
 
 autocmd FileType markdown setlocal tw=120 spell
 autocmd FileType markdown map <leader>p :!macdown %:p<CR>
+let g:vim_markdown_folding_level = 6
 
 """"
 " Python
@@ -465,11 +475,11 @@ function! CallGradle(...)
  let l:gradle_path = findfile('gradlew', '.;')
  " a:0 == # of args to the command
  if a:0 == 0
-    let &makeprg = l:gradle_path . " build"
+    let l:cmd = l:gradle_path . " build"
  else
-    let &makeprg = l:gradle_path . " " . join(a:000)
+    let l:cmd = l:gradle_path . " " . join(a:000)
  endif
- :make!
+ execute ":AsyncRun " . l:cmd
 endfunction
 
 command! -narg=* G :call CallGradle(<f-args>)|:copen|:winc J
