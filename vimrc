@@ -26,16 +26,9 @@ Plugin 'tpope/vim-rhubarb.git'
 Plugin 'mileszs/ack.vim'
 Plugin 'scrooloose/nerdtree'
 Plugin 'Shougo/deoplete.nvim'
-Plugin 'rip-rip/clang_complete'
 Plugin 'ervandew/supertab'
 Plugin 'majutsushi/tagbar'
-Plugin 'godlygeek/tabular'
-Plugin 'plasticboy/vim-markdown'
 Plugin 'sjbach/lusty'
-" neomake and asyncrun both let you run commands async but asyncrun is much
-" simpler and it auto-scrolls the output in the quickfix window which seems to
-" be impossible via neomake so I mostly use asyncrun
-Plugin 'neomake/neomake'
 Plugin 'skywind3000/asyncrun.vim'
 
 call vundle#end()
@@ -57,6 +50,9 @@ if !has('gui_vimr')
    command! SmallFont :set guifont=Monaco:h10
    command! Bigfont :set guifont=Menlo:h11
 endif
+
+" When you use :AsyncRun open the quickfix window and show 8 lines
+:let g:asyncrun_open = 8
 
 " Nerdtree shortcuts
 map <C-n> :NERDTree %:p:h<CR>
@@ -482,7 +478,7 @@ function! CallGradle(...)
  execute ":AsyncRun " . l:cmd
 endfunction
 
-command! -narg=* G :call CallGradle(<f-args>)|:copen|:winc J
+command! -narg=* G :call CallGradle(<f-args>)
 command! Fix :YcmCompleter FixIt
 command! Err :YcmDiags
 command! Gt :G buildTestOSXDebug
