@@ -28,6 +28,10 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'rip-rip/clang_complete'
 Plugin 'ervandew/supertab'
 Plugin 'majutsushi/tagbar'
+Plugin 'godlygeek/tabular'
+Plugin 'plasticboy/vim-markdown'
+" LustyExplorer
+Plugin 'sjbach/lusty'
 
 call vundle#end()
 filetype plugin indent on
@@ -36,8 +40,10 @@ filetype plugin indent on
 " End of Vundle setup.
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-command! SmallFont :set guifont=Monaco:h10
-command! Bigfont :set guifont=Menlo:h11
+if !has('gui_vimr')
+   command! SmallFont :set guifont=Monaco:h10
+   command! Bigfont :set guifont=Menlo:h11
+endif
 
 " Nerdtree shortcuts
 map <C-n> :NERDTree %:p:h<CR>
@@ -400,6 +406,7 @@ command! NoHl :hi TooManyChars NONE
 " Markdown
 
 autocmd FileType markdown setlocal tw=120 spell
+autocmd FileType markdown map <leader>p :!macdown %:p<CR>
 
 """"
 " Python
@@ -498,4 +505,6 @@ endif
 
 " There is apparently a bug in some versions of gvim that cause the cursor to
 " be invisible. This strange hack fixes it!
-let &guifont=&guifont
+if !has('gui_vimr')
+   let &guifont=&guifont
+endif
