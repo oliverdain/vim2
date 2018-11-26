@@ -25,11 +25,18 @@ Plugin 'tpope/vim-fugitive.git'
 Plugin 'tpope/vim-rhubarb.git'
 Plugin 'mileszs/ack.vim'
 Plugin 'scrooloose/nerdtree'
-Plugin 'Shougo/deoplete.nvim'
 Plugin 'ervandew/supertab'
 Plugin 'majutsushi/tagbar'
 Plugin 'sjbach/lusty'
 Plugin 'skywind3000/asyncrun.vim'
+Plugin 'autozimu/LanguageClient-neovim'
+if has('nvim')
+  Plugin 'Shougo/deoplete.nvim'
+else
+  Plugin 'Shougo/deoplete.nvim'
+  Plugin 'roxma/nvim-yarp'
+  Plugin 'roxma/vim-hug-neovim-rpc'
+endif
 
 call vundle#end()
 filetype plugin indent on
@@ -45,6 +52,11 @@ if has('nvim')
 endif
 
 " end neovim setup
+
+" general deoplete config
+let g:deoplete#enable_at_startup = 1
+:call deoplete#custom#option('auto_complete', v:true)
+:call deoplete#custom#option('complete_method', 'completefunc')
 
 if !has('gui_vimr')
    command! SmallFont :set guifont=Monaco:h10
@@ -396,6 +408,43 @@ au! BufNewFile * :call OnNewFile()
 " Language specific configs
 " Note some of this is also done via ~/.vim/indent, ~/.vim/ftplugin, etc.
 
+" Set up Language Server Protocol plugin for all langs
+let g:LanguageClient_serverCommands = {
+   \ 'cpp': ['/Users/oliverdain/bin/cquery/bin/cquery', '--log-file=/tmp/cq.log',
+        \ '--init={"cacheDirectory":"/tmp/cquery/"}']
+   \ }
+
+" Overridden because it's currently hopelessly broken with UltiSnips. See
+" https://github.com/autozimu/LanguageClient-neovim/issues/379
+let g:LanguageClient_hasSnippetSupport = 0
+
+" Per LanguageClient docs: https://github.com/cquery-project/cquery/wiki/Vim
+augroup LanguageClient_config
+  au!
+  au BufEnter * let b:Plugin_LanguageClient_started = 0
+  au User LanguageClientStarted setl signcolumn=yes
+  au User LanguageClientStarted let b:Plugin_LanguageClient_started = 1
+  au User LanguageClientStopped setl signcolumn=auto
+  au User LanguageClientStopped let b:Plugin_LanguageClient_stopped = 0
+augroup END
+
+" And set up LanguageClient keymaps for those filetypes where we have a server
+function! LC_maps()
+if has_key(g:LanguageClient_serverCommands, &filetype)
+  " Hit "K" in normal mode to get a pop-up window with the definition and
+  " comments for the method under the cursor
+  nnoremap <buffer> <silent> K :call LanguageClient#textDocument_hover()<cr>
+  " Go to the definition of the symbol
+  nnoremap <buffer> <silent> <C-]> :call LanguageClient#textDocument_definition()<CR>
+  " rename the symbol under the cursor
+  command! Rename :call LanguageClient#textDocument_rename()<CR>
+  " Try to fix issues that have been identified
+  command! Fix :call LanguageClient#textDocument_codeAction()<CR>
+endif
+endfunction
+
+autocmd FileType * call LC_maps()
+
 """"
 " Configs for multiple languages
 " highlight characters after column 80
@@ -431,12 +480,6 @@ let g:jedi#popup_on_dot = 0
 " Searches up from the current directory to the directory with a build.gradle
 " (e.g. the sub-project root) and then from there down for a file with the
 " given name.
-
-" clang_complete setup
-let g:clang_library_path="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib"
-let g:clang_auto_user_options="compile_commands.json, .clang_complete"
-let g:clang_snippets = 1
-let g:clang_snippets_engine = 'clang_complete'
 
 " tagbar setup
 nmap <leader>t :TagbarToggle<CR>
@@ -479,8 +522,6 @@ function! CallGradle(...)
 endfunction
 
 command! -narg=* G :call CallGradle(<f-args>)
-command! Fix :YcmCompleter FixIt
-command! Err :YcmDiags
 command! Gt :G buildTestOSXDebug
 
 
