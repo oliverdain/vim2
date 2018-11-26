@@ -30,6 +30,7 @@ Plugin 'majutsushi/tagbar'
 Plugin 'sjbach/lusty'
 Plugin 'skywind3000/asyncrun.vim'
 Plugin 'autozimu/LanguageClient-neovim'
+Plugin 'sakhnik/nvim-gdb'
 if has('nvim')
   Plugin 'Shougo/deoplete.nvim'
 else

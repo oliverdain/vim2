@@ -1,3 +1,5 @@
+# Overview 
+
 This is my current vim setup.
 
 To setup on a new machine:
@@ -8,9 +10,20 @@ To setup on a new machine:
 
 That's it for *basic* functionality.
 
-Language specific:
+# Language Specific
+
+## C++
+
+### Completions
 
 For C++ completion you will also want to clone and build
 [cquery](https://github.com/cquery-project/cquery/wiki/Building-cquery), the [Language Server
 Protocol](https://github.com/Microsoft/language-server-protocol) server for C++ completions, fixes, etc. After that you
 will also have to change into the `~/.vim/bundle/LanguageClient-neovim` directory and run `bash install.sh`.
+
+### LLDB Integration
+
+You will have to `cd .vim/bundle/nvim-gdb && ./install.sh` and you should then be able to [use LLDB from inside
+nvim](https://github.com/sakhnik/nvim-gdb).
+
+
