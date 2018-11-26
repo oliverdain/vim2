@@ -12,38 +12,37 @@ if has('python3')
 endif
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Vundle setup. All Vundle things have to be in this section
+" Vim-Plug Setup
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 filetype off
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
+call plug#begin('~/.vim/plugged')
 
-Plugin 'VundleVim/Vundle.vim'
-Plugin 'SirVer/ultisnips'
-Plugin 'nvie/vim-flake8'
-Plugin 'tpope/vim-fugitive.git'
-Plugin 'tpope/vim-rhubarb.git'
-Plugin 'mileszs/ack.vim'
-Plugin 'scrooloose/nerdtree'
-Plugin 'ervandew/supertab'
-Plugin 'majutsushi/tagbar'
-Plugin 'sjbach/lusty'
-Plugin 'skywind3000/asyncrun.vim'
-Plugin 'autozimu/LanguageClient-neovim'
-Plugin 'sakhnik/nvim-gdb'
+Plug 'SirVer/ultisnips'
+Plug 'nvie/vim-flake8'
+Plug 'tpope/vim-fugitive.git'
+Plug 'tpope/vim-rhubarb.git'
+Plug 'mileszs/ack.vim'
+Plug 'scrooloose/nerdtree'
+Plug 'ervandew/supertab'
+Plug 'majutsushi/tagbar'
+Plug 'sjbach/lusty'
+Plug 'skywind3000/asyncrun.vim'
+Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.sh' }
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'sakhnik/nvim-gdb', { 'do': './install.sh' }
 if has('nvim')
-  Plugin 'Shougo/deoplete.nvim'
+  Plug 'Shougo/deoplete.nvim' , { 'do': ':UpdateRemotePlugins' }
 else
-  Plugin 'Shougo/deoplete.nvim'
-  Plugin 'roxma/nvim-yarp'
-  Plugin 'roxma/vim-hug-neovim-rpc'
+  Plug 'Shougo/deoplete.nvim'
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
 endif
 
-call vundle#end()
+call plug#end()
 filetype plugin indent on
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" End of Vundle setup.
+" End of Vim-Plug setup.
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " neovim setup
@@ -57,7 +56,7 @@ endif
 " general deoplete config
 let g:deoplete#enable_at_startup = 1
 :call deoplete#custom#option('auto_complete', v:true)
-:call deoplete#custom#option('complete_method', 'completefunc')
+:call deoplete#custom#option('complete_method', 'omnifunc')
 
 if !has('gui_vimr')
    command! SmallFont :set guifont=Monaco:h10
@@ -414,6 +413,11 @@ let g:LanguageClient_serverCommands = {
    \ 'cpp': ['/Users/oliverdain/bin/cquery/bin/cquery', '--log-file=/tmp/cq.log',
         \ '--init={"cacheDirectory":"/tmp/cquery/"}']
    \ }
+" And hook it up to deoplete
+call deoplete#custom#option('sources', {
+    \ 'cpp': ['LanguageClient'],
+    \ 'c': ['LanguageClient'],
+\})
 
 " Overridden because it's currently hopelessly broken with UltiSnips. See
 " https://github.com/autozimu/LanguageClient-neovim/issues/379
