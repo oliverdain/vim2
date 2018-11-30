@@ -422,6 +422,12 @@ call deoplete#custom#option('sources', {
 " Overridden because it's currently hopelessly broken with UltiSnips. See
 " https://github.com/autozimu/LanguageClient-neovim/issues/379
 let g:LanguageClient_hasSnippetSupport = 0
+" Override or it overwrites things like compile errors with in-file
+" diagnostics that happen while you're in the middle of fixing the compile
+" errors
+let g:LanguageClient_diagnosticsList = 'Location'
+
+
 
 " Per LanguageClient docs: https://github.com/cquery-project/cquery/wiki/Vim
 augroup LanguageClient_config
