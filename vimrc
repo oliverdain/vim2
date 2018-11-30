@@ -19,8 +19,8 @@ call plug#begin('~/.vim/plugged')
 
 Plug 'SirVer/ultisnips'
 Plug 'nvie/vim-flake8'
-Plug 'tpope/vim-fugitive.git'
-Plug 'tpope/vim-rhubarb.git'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-rhubarb'
 Plug 'mileszs/ack.vim'
 Plug 'scrooloose/nerdtree'
 Plug 'ervandew/supertab'
@@ -29,7 +29,7 @@ Plug 'sjbach/lusty'
 Plug 'skywind3000/asyncrun.vim'
 Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.sh' }
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'sakhnik/nvim-gdb', { 'do': './install.sh' }
+Plug 'gilligan/vim-lldb'
 if has('nvim')
   Plug 'Shougo/deoplete.nvim' , { 'do': ':UpdateRemotePlugins' }
 else
@@ -461,8 +461,7 @@ autocmd FileType * call LC_maps()
 " highlight characters after column 80
 hi TooManyChars guifg=White guibg=Red ctermfg=White ctermbg=Red
 autocmd FileType java,cpp,c,python,javascript match TooManyChars /\%>120v.\+/
-" Quick command to turn off this highlighting. Handy when editing files that
-" don't conform to the char limit.
+" Quick command to turn off this highlighting. Handy when editing files that don't conform to the char limit.
 " TODO: This turns off highlighting globally. Should figure out how to do it
 " for just the current buffer.
 command! NoHl :hi TooManyChars NONE
@@ -491,6 +490,12 @@ let g:jedi#popup_on_dot = 0
 " Searches up from the current directory to the directory with a build.gradle
 " (e.g. the sub-project root) and then from there down for a file with the
 " given name.
+
+" mapping for vim-lldb
+let g:lldb_map_Lnext = "n"
+let g:lldb_map_Lstep = "s"
+let g:lldb_map_Lfinish = "f"
+
 
 " tagbar setup
 nmap <leader>t :TagbarToggle<CR>
