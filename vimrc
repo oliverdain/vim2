@@ -491,12 +491,6 @@ let g:jedi#popup_on_dot = 0
 " (e.g. the sub-project root) and then from there down for a file with the
 " given name.
 
-" mapping for vim-lldb
-let g:lldb_map_Lnext = "n"
-let g:lldb_map_Lstep = "s"
-let g:lldb_map_Lfinish = "f"
-
-
 " tagbar setup
 nmap <leader>t :TagbarToggle<CR>
 
