@@ -37,8 +37,9 @@ const activate = (oni) => {
 
 module.exports = {
    activate,
+   "achievements.enabled": false,
    "commandline.mode": false,
-   "ui.colorscheme": "slate",
+   "ui.colorscheme": "koehler",
    "oni.loadInitVim": true,
    "autoClosingPairs.enabled": false,
    // UI customizations
